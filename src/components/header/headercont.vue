@@ -1,15 +1,20 @@
 <template>
-  <div class="headercont">
-    <h1>{{ msg }}</h1>
+  <div class="header">
+    <div class="content-wrapper">
+      <div class="avatar">
+        <img :src="seller.avatar">
+      </div>
+    </div>
+    <div class="announcement-wrapper">
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'headercont',
-  data () {
-    return {
-      msg: 'I am header!'
+  props: {
+    seller: {
+      type: Object
     }
   }
 }

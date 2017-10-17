@@ -9,11 +9,30 @@
     <router-view></router-view>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 import headercont from './components/header/headercont'
 
+const ERR_OK = 0
 export default {
   name: 'app',
+  data () {
+    return {
+      seller: {}
+    }
+  },
+  created () {
+    // GET /someUrl
+    this.$http.get('/api/seller').then(response => {
+      // get body data
+      response = response.body
+      if (response.errno === ERR_OK) {
+        this.seller = response.data
+        console.log(this.seller)
+      }
+    }, response => {
+      // error callback
+    })
+  },
   components: {
     'headercont': headercont
   }
