@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <headercont></headercont>
+    <headercont v-bind:seller="seller"></headercont>
     <ul class="tab">
       <li class="tab-item"><router-link to="/goods">商品</router-link></li>
       <li class="tab-item"><router-link to="/ratings">评价</router-link></li>
@@ -9,7 +9,7 @@
     <router-view></router-view>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script type="text/babel">
 import headercont from './components/header/headercont'
 
 const ERR_OK = 0
@@ -27,7 +27,7 @@ export default {
       response = response.body
       if (response.errno === ERR_OK) {
         this.seller = response.data
-        console.log(this.seller)
+        // console.log(this.seller)
       }
     }, response => {
       // error callback
