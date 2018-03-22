@@ -119,8 +119,8 @@ a {
         .icon{
           display:inline-block;
           vertical-align:top;
-          width:12px;
-          height:12px;
+          width:14px;
+          height:14px;
           background-size: 100%;
           margin-right: 2px;
         }
