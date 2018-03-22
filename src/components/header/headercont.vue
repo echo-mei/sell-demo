@@ -12,9 +12,9 @@
         <div class="description">
           {{seller.description}}/{{seller.deliveryTime}}分钟送达
         </div>
-        <div class=" discount" v-if="seller.supports">
+        <div class="business-activity" v-if="seller.supports">
           <div class="cont">
-            <span class="icon"></span>
+            <span class="icon" :class="classObject[seller.supports[0].type]"></span>
             <span class="des">{{seller.supports[0].description}}</span>
           </div>
           <div class="num">{{seller.supports.length}}个<i class="icon-arrow_lift"></i></div>
@@ -35,6 +35,11 @@ export default {
   props: {
     seller: {
       type: Object
+    }
+  },
+  computed: {
+    classObject: function () {
+      return ['decrease', 'discount', 'guarantee', 'invioce', 'special']
     }
   }
 }
@@ -109,8 +114,19 @@ a {
       margin-bottom: 10px;
       margin-right: 10px;
     }
-    .discount{
+    .business-activity{
       .cont{
+        .icon{
+          display:inline-block;
+          vertical-align:top;
+          width:12px;
+          height:12px;
+          background-size: 100%;
+          margin-right: 2px;
+        }
+        .decrease{
+          .bg-image('decrease_2');
+        }
         .des{
           font-size:10px;
           color:#ffffff;
