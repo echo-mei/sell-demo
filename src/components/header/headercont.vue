@@ -17,15 +17,21 @@
             <span class="icon" :class="classObject[seller.supports[0].type]"></span>
             <span class="des">{{seller.supports[0].description}}</span>
           </div>
-          <div class="num">{{seller.supports.length}}个<i class="icon-arrow_lift"></i></div>
+          <div class="num" @click="showDetail">{{seller.supports.length}}个<i class="icon-arrow_lift"></i></div>
         </div>
       </div>
     </div>
-    <div class="announcement-wrapper">
+    <div class="announcement-wrapper" @click="showDetail">
       <span class="brand"></span>
       <span class="cont">{{seller.bulletin}}</span>
     </div>
     <img class="header-bg" :src="seller.avatar">
+    <div v-show="isShowDetail" class="detail">
+      <div class="detail-wrapper">
+        <h1 class="title">{{seller.name}}</h1>
+      </div>
+      <div class="detail-close"></div>
+    </div>
   </div>
 </template>
 
@@ -37,8 +43,18 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      isShowDetail: false
+    }
+  },
+  methods: {
+    showDetail () {
+      this.isShowDetail = !this.isShowDetail
+    }
+  },
   computed: {
-    classObject: function () {
+    classObject () {
       return ['decrease', 'discount', 'guarantee', 'invioce', 'special']
     }
   }
@@ -197,6 +213,37 @@ a {
         -ms-filter: blur(8px);    
             filter: blur(8px);
     z-index:-1;
+  }
+
+  .detail{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(7,17,27,0.8);
+
+    .detail-wrapper{
+      width:100%;
+      min-height:100%;
+      padding-bottom:64px;
+      padding-top:64px;
+
+      .title{
+        font-size:16px;
+        font-weight:700;
+        color:#ffffff;
+        line-height:16px;
+        margin-bottom:16px;
+      }
+    }
+    .detail-close{
+      position:fixed;
+      bottom:0;
+      font-size:32px;
+      color:rgba(255,255,255,0.5);
+      padding-bottom:32px;
+    }
   }
 }
 </style>
