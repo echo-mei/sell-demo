@@ -17,13 +17,14 @@
             <span class="icon" :class="classObject[seller.supports[0].type]"></span>
             <span class="des">{{seller.supports[0].description}}</span>
           </div>
-          <div class="num" @click="showDetail">{{seller.supports.length}}个<i class="icon-arrow_lift"></i></div>
+          <div class="num" @click="showDetail">{{seller.supports.length}}个<i class="icon-keyboard_arrow_right"></i></div>
         </div>
       </div>
     </div>
     <div class="announcement-wrapper" @click="showDetail">
       <span class="brand"></span>
       <span class="cont">{{seller.bulletin}}</span>
+      <i class="icon-keyboard_arrow_right"></i>
     </div>
     <img class="header-bg" :src="seller.avatar">
     <div v-show="isShowDetail" class="detail">
@@ -161,6 +162,9 @@ a {
         line-height:12px;
         border-radius:12px;
         background-color:rgba(0,0,0,0.2);
+        .icon-keyboard_arrow_right{
+          margin-left: 2px;
+        }
       }
     }
   }
@@ -183,7 +187,7 @@ a {
     .cont{   
       display: inline-block;
       vertical-align: middle;  
-      width:310px;   
+      width:316px;   
       line-height: 18px;
       font-size: 10px;
       font-weight: 200;
@@ -194,6 +198,7 @@ a {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .icon-keyboard_arrow_right{font-size: 12px;vertical-align: middle;}
   }
 
   .header-bg{
