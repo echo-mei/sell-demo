@@ -31,7 +31,7 @@
       <div class="detail-wrapper">
         <h1 class="title">{{seller.name}}</h1>
       </div>
-      <div class="detail-close"></div>
+      <div class="detail-close"><i class="icon-close" @click="hideDetail"></i></div>
     </div>
   </div>
 </template>
@@ -51,7 +51,10 @@ export default {
   },
   methods: {
     showDetail () {
-      this.isShowDetail = !this.isShowDetail
+      this.isShowDetail = true
+    },
+    hideDetail () {
+      this.isShowDetail = false
     }
   },
   computed: {
@@ -245,6 +248,8 @@ a {
     .detail-close{
       position:fixed;
       bottom:0;
+      width:100%;
+      text-align:center;
       font-size:32px;
       color:rgba(255,255,255,0.5);
       padding-bottom:32px;
