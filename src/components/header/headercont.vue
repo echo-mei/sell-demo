@@ -30,13 +30,18 @@
     <div v-show="isShowDetail" class="detail">
       <div class="detail-wrapper">
         <h1 class="title">{{seller.name}}</h1>
+        <div class="star-wrapper">
+          <star :size="48" :score="seller.score"></star>
+        </div>
       </div>
       <div class="detail-close"><i class="icon-close" @click="hideDetail"></i></div>
     </div>
   </div>
 </template>
 
-<script>
+<script type="text/babel">
+import star from '../star/star'
+
 export default {
   // props: ['seller']
   props: {
@@ -61,6 +66,9 @@ export default {
     classObject () {
       return ['decrease', 'discount', 'guarantee', 'invioce', 'special']
     }
+  },
+  components: {
+    star
   }
 }
 </script>
