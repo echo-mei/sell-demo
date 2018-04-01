@@ -33,6 +33,27 @@
         <div class="star-wrapper">
           <star :size="48" :score="seller.score"></star>
         </div>
+        <div class="info-wrapper">
+          <div class="info-title">
+            <div class="line"></div>
+            <div class="text">优惠信息</div>
+            <div class="line"></div>
+          </div>
+          <ul v-if="seller.supports" class="discount-wrapper">
+            <li v-for="item in seller.supports" class="support-item">
+              <span :class="classObject[item.type]" class="icon"></span>
+              <span class="des">{{item.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="info-wrapper">
+          <div class="info-title">
+            <div class="line"></div>
+            <div class="text">商家公告</div>
+            <div class="line"></div>
+          </div> 
+          <div class="announcement">{{seller.bulletin}}</div>      
+        </div>
       </div>
       <div class="detail-close"><i class="icon-close" @click="hideDetail"></i></div>
     </div>
@@ -64,7 +85,7 @@ export default {
   },
   computed: {
     classObject () {
-      return ['decrease', 'discount', 'guarantee', 'invioce', 'special']
+      return ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     }
   },
   components: {
@@ -147,13 +168,25 @@ a {
         .icon{
           display:inline-block;
           vertical-align:top;
-          width:14px;
-          height:14px;
+          width:12px;
+          height:12px;
           background-size: 100%;
           margin-right: 2px;
         }
         .decrease{
-          .bg-image('decrease_2');
+          .bg-image('decrease_1');
+        }
+        .discount{
+          .bg-image('discount_1');
+        }
+        .guarantee{
+          .bg-image('guarantee_1');
+        }
+        .invoice{
+          .bg-image('invoice_1');
+        }
+        .special{
+          .bg-image('special_1');
         }
         .des{
           font-size:10px;
@@ -251,6 +284,79 @@ a {
         color:#ffffff;
         line-height:16px;
         margin-bottom:16px;
+      }
+
+      .info-wrapper{
+        padding:0 36px;
+
+        .info-title{
+          display: flex;
+          width:100%;
+          margin:30px auto 24px auto;
+          
+          .line{
+            flex:1;
+            position:relative;
+            top:-6px;
+            border-bottom:1px solid rgba(255,255,255,0.2);
+          }
+          .text{
+            flex:1;
+            font-size:14px;
+            font-weight:700;
+            color:rgb(255,255,255);
+            line-height:14px;
+          }
+        }
+
+        .discount-wrapper{
+          margin:24px 12px;
+          font-size:0;
+          .support-item{
+            width:100%;
+            text-align:left;
+            margin-bottom:12px;
+            .icon{
+              display:inline-block;
+              vertical-align:middle;
+              width:16px;
+              height:16px;
+              background-size: 100%;
+              margin-right: 6px;
+            }
+            .decrease{
+              .bg-image('decrease_2');
+            }
+            .discount{
+              .bg-image('discount_2');
+            }
+            .guarantee{
+              .bg-image('guarantee_2');
+            }
+            .invoice{
+              .bg-image('invoice_2');
+            }
+            .special{
+              .bg-image('special_2');
+            }
+            .des{
+              vertical-align:middle;
+              font-size:12px;
+              font-weight:200;
+              color:rgb(255,255,255);
+              line-height:12px;
+            }
+          }          
+        }
+
+        .announcement{
+          margin:24px 12px;
+          font-size:12px;
+          font-weight:200;
+          color:#fff;
+          line-height:24px;
+          text-align:left;
+        }
       }
     }
     .detail-close{

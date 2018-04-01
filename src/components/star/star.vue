@@ -1,6 +1,6 @@
 <template>
 	<div class="star" :class="starType"> 
-		<span v-for="starClass in starClasses" :class="starClass" class"itemClass" track-by="$index"></span>
+		<span v-for="starClass in starClasses" :class="starClass" class="itemClass" track-by="$index"></span>
 	</div>
 </template>
 
@@ -18,6 +18,9 @@ props: {
 },
 computed: {
 	starType () {
+		console.log(this.size)
+		console.log(this.score)
+		// console.log(this.size, this.score)
 		return 'star-' + this.size
 	},
 	starClasses () {
@@ -32,8 +35,9 @@ computed: {
 		if (halfFlag) {
 			result[onLen] = 'half'
 		}
-		while (onLen++ < LEN) {
+		while (onLen < LEN) {
 			result[onLen] = 'off'
+			onLen++
 		}
 
 		console.log(result)
@@ -51,48 +55,61 @@ computed: {
 
 	.itemClass{
 		display:inline-block;
+		background-size:100%;
+		background-repeat: no-repeat;
+		&:last-child{
+			margin-right:0;
+		}
 	}
-	.star-48{
+
+}
+.star-48{
+	.itemClass{
 		width:20px;
 		height:20px;
 		margin-right:22px;
-		&.on{
-			.bg-image('star48_on');
-		}
-		&.half{
-			.bg-image('star48_half');
-		}
-		&.off{
-			.bg-image('star48_off');
-		}
+
 	}
-	.star-36{
+	.on{
+		.bg-image('star48_on');
+	}
+	.half{
+		.bg-image('star48_half');
+	}
+	.off{
+		.bg-image('star48_off');
+	}
+}
+.star-36{
+	.itemClass{
 		width:18px;
 		height:18px;
 		margin-right:20px;
-		&.on{
-			.bg-image('star36_on');
-		}
-		&.half{
-			.bg-image('star36_half');
-		}
-		&.off{
-			.bg-image('star36_off');
-		}
 	}
-	.star-24{
+	.on{
+		.bg-image('star36_on');
+	}
+	.half{
+		.bg-image('star36_half');
+	}
+	.off{
+		.bg-image('star36_off');
+	}
+}
+.star-24{
+	.itemClass{
 		width:16px;
 		height:16px;
 		margin-right:18px;
-		&.on{
-			.bg-image('star24_on');
-		}
-		&.half{
-			.bg-image('star24_half');
-		}
-		&.off{
-			.bg-image('star24_off');
-		}
+	}
+	.on{
+		.bg-image('star24_on');
+	}
+	.half{
+		.bg-image('star24_half');
+	}
+	.off{
+		.bg-image('star24_off');
 	}
 }
 </style>
