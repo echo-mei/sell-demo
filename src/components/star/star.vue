@@ -18,9 +18,6 @@ props: {
 },
 computed: {
 	starType () {
-		console.log(this.size)
-		console.log(this.score)
-		// console.log(this.size, this.score)
 		return 'star-' + this.size
 	},
 	starClasses () {
@@ -28,7 +25,6 @@ computed: {
 		let fullStarNum = Math.floor(this.score * 2) / 2
 		let onLen = Math.floor(fullStarNum)
 		let halfFlag = (fullStarNum * 2) % 2 !== 0
-		console.log(fullStarNum, onLen, halfFlag)
 		for (var i = 0; i < onLen; i++) {
 			result[i] = 'on'
 		}
@@ -40,7 +36,6 @@ computed: {
 			onLen++
 		}
 
-		console.log(result)
 		return result
 	}
 }
