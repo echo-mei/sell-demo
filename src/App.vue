@@ -2,7 +2,7 @@
   <div id="app">
     <headercont v-bind:seller="seller"></headercont>
     <ul class="tab">
-      <li class="tab-item"><router-link to="/goods">商品</router-link></li>
+      <li class="tab-item"><router-link to="/goods" v-bind:goods="goods">商品</router-link></li>
       <li class="tab-item"><router-link to="/ratings">评价</router-link></li>
       <li class="tab-item"><router-link to="/seller">商家</router-link></li>
     </ul>
@@ -17,17 +17,28 @@ export default {
   name: 'app',
   data () {
     return {
-      seller: {}
+      seller: {},
+      goods: {}
     }
   },
   created () {
-    // GET /someUrl
+    // GET seller
     this.$http.get('/api/seller').then(response => {
       // get body data
       response = response.body
       if (response.errno === ERR_OK) {
         this.seller = response.data
-        // console.log(this.seller)
+      }
+    }, response => {
+      // error callback
+    })
+
+    // GET /someUrl
+    this.$http.get('/api/goods').then(response => {
+      // get body data
+      response = response.body
+      if (response.errno === ERR_OK) {
+        this.goods = response.data
       }
     }, response => {
       // error callback
