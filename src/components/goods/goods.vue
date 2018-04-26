@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-  	<div class="menu-wrapper">
+  	<div class="menu-wrapper" ref="menuWrapper">
   		<ul class="menu-main">
   			<li v-for="item in goods" class="menu-item">
   				<span class="text">
@@ -9,31 +9,29 @@
 			</li>
   		</ul>
   	</div>
-  	<div class="foods-wrapper">
+  	<div class="foods-wrapper" ref="foodsWrapper">
   		<ul class="foods-main">
   			<li v-for="item in goods" class="food-item">
   				<h3 class="food-title">{{item.name}}</h3>
-  				<div v-for="food in item.foods" class="food-cont">
-  					<div class="avatar">
-        				<img width="64"  height="64" :src="food.image">
-      				</div>
-      				<div class="content">
-        				<div class="name">
-        					{{food.name}}
-        				</div>
-        				<div v-show="food.description!=''" class="description">
-        					{{food.description}}
-        				</div>
-        				<div class="sales-performance">
-        					<span class="salenum">月售{{food.sellCount}}份</span>
-        					<span class="rating">好评率{{food.rating}}%</span>
-        				</div>
-        				<div class="prince">
-        					<span class="nowprince">￥{{food.price}}</span>
-        					<span class="oldprince" v-show="food.oldPrice!=''">￥{{food.oldPrice}}</span>
-        				</div>
-        			</div>
-  				</div>
+  				<ul>
+  					<li v-for="food in item.foods" class="food-cont">
+	  					<div class="avatar">
+	        				<img :src="food.image">
+	      				</div>
+	      				<div class="content">
+	        				<div class="name">{{food.name}}</div>
+	        				<div v-show="food.description!=''" class="description">{{food.description}}</div>
+	        				<div class="sales-performance">
+	        					<span class="salenum">月售{{food.sellCount}}份</span>
+	        					<span class="rating">好评率{{food.rating}}%</span>
+	        				</div>
+	        				<div class="price">
+	        					<span class="nowprice">￥{{food.price}}</span>
+	        					<span class="oldprice" v-show="food.oldPrice!=''">￥{{food.oldPrice}}</span>
+	        				</div>
+	        			</div>
+	  				</li>
+  				</ul>
   			</li>
   		</ul>
   	</div>
@@ -41,6 +39,8 @@
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+
 const ERR_OK = 0
 export default {
   props: {
@@ -65,6 +65,13 @@ export default {
       }
     }, response => {
       // error callback
+    })
+  },
+  mounted () {
+    this.$nextTick(() => {
+       console.log(this.$refs.menuWrapper, this.$refs.foodsWrapper)
+       this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
+       this.foodScroll = new BScroll(this.$refs.foodsWrapper, {})
     })
   }
 }
@@ -145,6 +152,7 @@ export default {
 				}
 
 				.food-cont{
+					display:flex;
 					margin:0 18px;
 					padding:18px 0;
 					font-size:0;
@@ -154,20 +162,30 @@ export default {
 					&::last-child{border:none;}
 
 					.avatar{
-						display:inline-block;
-						vertical-align:top;
+						flex:0 0 57px;
+						width:57px;
+						height:57px;
+
+						img{
+							width:100%;
+							height:100%;
+						}
+						// display:inline-block;
+						// vertical-align:top;
 					}
 					.content{
-						display:inline-block;
+						flex:1;
+						// display:flex;
+						// display:inline-block;
+						// vertical-align:top;
 						margin-left:10px;
 						text-align:left;
-						vertical-align:top;
-
+					
 						.name{
 							font-size:14px;
 							line-height:14px;
 							margin-top:2px;
-							color:#333;
+							color:rgb(7,17,27);
 						}
 						.description{
 							font-size:10px;
@@ -183,15 +201,15 @@ export default {
 
 							.salenum{margin-right:12px;}
 						}
-						.prince{
-							.nowprince{
+						.price{
+							.nowprice{
 								font-size:14px;
 								line-height:24px;
 								font-weight:700;
 								color:rgb(240,20,20);
 								margin-right:8px;
 							}
-							.oldprince{
+							.oldprice{
 								font-size:10px;
 								line-height:24px;
 								color:rgb(147,153,159);
