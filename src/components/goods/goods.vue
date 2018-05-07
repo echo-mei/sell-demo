@@ -62,17 +62,19 @@ export default {
       response = response.body
       if (response.errno === ERR_OK) {
         this.goods = response.data
+        this.aaa()
       }
     }, response => {
       // error callback
     })
   },
-  mounted () {
-    this.$nextTick(() => {
-       console.log(this.$refs.menuWrapper, this.$refs.foodsWrapper)
-       this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
-       this.foodScroll = new BScroll(this.$refs.foodsWrapper, {})
-    })
+  methods: {
+    aaa () {
+      this.$nextTick(() => {
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
+        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {})
+      })
+    }
   }
 }
 </script>
