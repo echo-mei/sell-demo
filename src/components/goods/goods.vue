@@ -35,11 +35,13 @@
   			</li>
   		</ul>
   	</div>
+  	<shopcart></shopcart>
   </div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
+import shopcart from '../shopcart/shopcart'
 
 const ERR_OK = 0
 export default {
@@ -97,6 +99,7 @@ export default {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
         this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
 
+        console.log(this.foodScroll)
         this.foodScroll.on('srcoll', (pos) => {
           this.srcollY = Math.abs(Math.round(pos.y))
           console.log(this.srcollY)
@@ -112,6 +115,9 @@ export default {
         this.listHeight.push(height)
       }
     }
+  },
+  components: {
+    'shopcart': shopcart
   }
 }
 </script>
