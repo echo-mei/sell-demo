@@ -2,7 +2,7 @@
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   		<ul class="menu-main">
-  			<li v-for="item in goods" class="menu-item">
+  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIdex === index}" @click="selectMenu(index)">
   				<span class="text">
   					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
   				{{item.name}}</span>
@@ -11,7 +11,7 @@
   	</div>
   	<div class="foods-wrapper" ref="foodsWrapper">
   		<ul class="foods-main">
-  			<li v-for="item in goods" class="food-item">
+  			<li v-for="item in goods" class="food-item food-item-hook">
   				<h3 class="food-title">{{item.name}}</h3>
   				<ul>
   					<li v-for="food in item.foods" class="food-cont">
@@ -51,7 +51,9 @@ export default {
   data () {
     return {
       goods: {},
-      classMap: []
+      classMap: [],
+      listHeight: [],
+      srcollY: 0
     }
   },
   created () {
@@ -62,18 +64,53 @@ export default {
       response = response.body
       if (response.errno === ERR_OK) {
         this.goods = response.data
-        this.aaa()
+        this._initScroll()
+        this._calculateHeight()
       }
     }, response => {
       // error callback
     })
   },
+  computed: {
+    currentIdex () {
+      for (let i = 0; i < this.listHeight.length; i++) {
+        let height1 = this.listHeight[i]
+        let height2 = this.listHeight[i + 1]
+        if (!height2 || (this.srcollY > height1 && this.srcollY < height2)) {
+          return i
+        }
+      }
+      return 0
+    }
+  },
   methods: {
-    aaa () {
+    selectMenu (index) {
+      if (!event._constructed) {
+        return
+      }
+      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
+      let el = foodList[index]
+      this.foodScroll.scrollToElement(el, 300)
+    },
+    _initScroll () {
       this.$nextTick(() => {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
-        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {})
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
+        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
+
+        this.foodScroll.on('srcoll', (pos) => {
+          this.srcollY = Math.abs(Math.round(pos.y))
+          console.log(this.srcollY)
+        })
       })
+    },
+    _calculateHeight () {
+      let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
+      let height = 0
+      this.listHeight.push(height)
+      for (let i = 0; i < foodList.length; i++) {
+        height += foodList[i]
+        this.listHeight.push(height)
+      }
     }
   }
 }
@@ -96,11 +133,21 @@ export default {
 		.menu-main{
 			.menu-item{
 				display: table;
-				margin:0 12px;
 				height:54px;
 				width:56px;	
+				padding:0 12px;
 				line-height:14px;
-				border-bottom:1px solid rgba(7,17,27,.1);
+				
+				&.current{
+					position:relative;
+					z-index:10;
+					background:#ffffff;
+					margin-top:-1px;
+					font-weight:700;
+					.text{
+						border:none;
+					}
+				}
 				.icon{
 	              display:inline-block;
 	              vertical-align:middle;
@@ -130,7 +177,8 @@ export default {
 					font-size:12px;
 					font-weight:200;
 					text-align: left;
-					color:rgb(77,85,93)
+					color:rgb(77,85,93);
+					border-bottom:1px solid rgba(7,17,27,.1);
 				}
 			}
 		}
@@ -161,7 +209,7 @@ export default {
 					border-bottom:1px solid rgba(7,17,27,.1);
 					text-align:left;
 
-					&::last-child{border:none;}
+					&::last-of-type{border:none;}
 
 					.avatar{
 						flex:0 0 57px;
@@ -172,14 +220,9 @@ export default {
 							width:100%;
 							height:100%;
 						}
-						// display:inline-block;
-						// vertical-align:top;
 					}
 					.content{
 						flex:1;
-						// display:flex;
-						// display:inline-block;
-						// vertical-align:top;
 						margin-left:10px;
 						text-align:left;
 					
@@ -191,7 +234,7 @@ export default {
 						}
 						.description{
 							font-size:10px;
-							line-height:10px;
+							line-height:14px;
 							margin-top:8px;
 							color:rgb(147,153,159);
 						}
