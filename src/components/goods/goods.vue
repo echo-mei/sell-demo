@@ -28,6 +28,7 @@
 	        				<div class="price">
 	        					<span class="nowprice">￥{{food.price}}</span>
 	        					<span class="oldprice" v-show="food.oldPrice!=''">￥{{food.oldPrice}}</span>
+	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
 	        			</div>
 	  				</li>
@@ -35,7 +36,7 @@
   			</li>
   		</ul>
   	</div>
-  	<shopcart></shopcart>
+  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -55,7 +56,8 @@ export default {
       goods: {},
       classMap: [],
       listHeight: [],
-      srcollY: 0
+      srcollY: 0,
+      selectFoods: []
     }
   },
   created () {
@@ -99,7 +101,6 @@ export default {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
         this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
 
-        console.log(this.foodScroll)
         this.foodScroll.on('srcoll', (pos) => {
           this.srcollY = Math.abs(Math.round(pos.y))
           console.log(this.srcollY)

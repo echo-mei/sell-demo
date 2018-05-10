@@ -2,11 +2,11 @@
   <div id="app">
     <headercont v-bind:seller="seller"></headercont>
     <ul class="tab">
-      <li class="tab-item"><router-link to="/goods" v-bind:goods="goods">商品</router-link></li>
+      <li class="tab-item"><router-link to="/goods">商品</router-link></li>
       <li class="tab-item"><router-link to="/ratings">评价</router-link></li>
       <li class="tab-item"><router-link to="/seller">商家</router-link></li>
     </ul>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 <script type="text/babel">
@@ -33,16 +33,16 @@ export default {
       // error callback
     })
 
-    // GET /someUrl
-    this.$http.get('/api/goods').then(response => {
-      // get body data
-      response = response.body
-      if (response.errno === ERR_OK) {
-        this.goods = response.data
-      }
-    }, response => {
-      // error callback
-    })
+    // // GET /someUrl
+    // this.$http.get('/api/goods').then(response => {
+    //   // get body data
+    //   response = response.body
+    //   if (response.errno === ERR_OK) {
+    //     this.goods = response.data
+    //   }
+    // }, response => {
+    //   // error callback
+    // })
   },
   components: {
     'headercont': headercont
