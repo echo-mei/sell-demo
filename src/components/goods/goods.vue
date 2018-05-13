@@ -30,6 +30,9 @@
 	        					<span class="oldprice" v-show="food.oldPrice!=''">￥{{food.oldPrice}}</span>
 	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
+	        				<div class="cartcontrol-wrapper">
+	        					<cartcontrol :food="food"></cartcontrol>
+	        				</div>
 	        			</div>
 	  				</li>
   				</ul>
@@ -43,6 +46,7 @@
 <script>
 import BScroll from 'better-scroll'
 import shopcart from '../shopcart/shopcart'
+import cartcontrol from '../cartcontrol/cartcontrol'
 
 const ERR_OK = 0
 export default {
@@ -56,8 +60,7 @@ export default {
       goods: {},
       classMap: [],
       listHeight: [],
-      srcollY: 0,
-      selectFoods: []
+      srcollY: 0
     }
   },
   created () {
@@ -85,10 +88,21 @@ export default {
         }
       }
       return 0
+    },
+    selectFoods () {
+      let selectFoods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            selectFoods.push(food)
+          }
+        })
+      })
+      return selectFoods
     }
   },
   methods: {
-    selectMenu (index) {
+    selectMenu (index, event) {
       if (!event._constructed) {
         return
       }
@@ -118,7 +132,8 @@ export default {
     }
   },
   components: {
-    'shopcart': shopcart
+    'shopcart': shopcart,
+    'cartcontrol': cartcontrol
   }
 }
 </script>
@@ -229,6 +244,7 @@ export default {
 						}
 					}
 					.content{
+						position:relative;
 						flex:1;
 						margin-left:10px;
 						text-align:left;
@@ -268,6 +284,14 @@ export default {
 								font-weight:700;
 								text-decoration: line-through;
 							}
+							.add{
+								display:inline-block;
+							}
+						}
+						.cartcontrol-wrapper{
+							position:absolute;
+							right:-10px;
+							bottom:-10px;
 						}
 					}
 				}

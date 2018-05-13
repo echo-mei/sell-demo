@@ -5,14 +5,14 @@
         <div class="logo-wrapper">
           <div class="logo" :class="{active:selectFoods.length>0}">
             <i class="icon-shopping_cart"></i>
-            <i class="num" v-if="selectFoods.length>0">{{selectFoods.length}}</i>
+            <span class="num" v-if="totalCount>0">{{totalCount}}</span>
           </div>
         </div>
         <div class="price">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right">
-        ￥{{minPrice}}起送
+      <div class="content-right" :class="{active:totalPrice>=minPrice}">
+        {{payDesc}}
       </div>
     </div>
     <div class=""></div>
@@ -24,13 +24,21 @@ export default {
   // props: ['seller']
   props: {
     selectFoods: {
-      type: Array
+      type: Array,
+      default () {
+        return [{
+          price: 30,
+          count: 2
+        }]
+      }
     },
     deliveryPrice: {
-      type: Number
+      type: Number,
+      default: 0
     },
     minPrice: {
-      type: Number
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -41,9 +49,25 @@ export default {
     totalPrice () {
       let sum = 0
       this.selectFoods.forEach((food) => {
-        sum += food
+        sum += food.price * food.count
       })
       return sum
+    },
+    totalCount () {
+      let count = 0
+      this.selectFoods.forEach((food) => {
+        count += food.count
+      })
+      return count
+    },
+    payDesc () {
+      if (this.totalPrice === 0) {
+        return `￥${this.minPrice}起送`
+      } else if (this.totalPrice > 0 && this.totalPrice < this.minPrice) {
+        return `还差￥${this.minPrice - this.totalPrice}起送`
+      } else {
+        return '去结算'
+      }
     }
   }
 }
@@ -99,12 +123,14 @@ export default {
           }
           .num{
             position:absolute;
-            left:44px;
-            top:-10px;
+            left:30px;
+            top:0;
             display:inline-block;
             background:#ff0000;
             color:#fff;
             padding:0 6px;
+            font-size:9px;
+            line-height:16px;
             border-radius:50%;
           }
         }
@@ -138,6 +164,10 @@ export default {
       font-weight:700;
       line-height:48px;
       color:rgba(255,255,255,.4);
+      &.active{
+        background:#1da065;
+        color:#fff;
+      }
     }
   }
 }
