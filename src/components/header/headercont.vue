@@ -269,7 +269,7 @@ a {
     width:100%;
     height:100%;
     background:rgba(7,17,27,0.8);
-    z-index:3;
+    z-index:60;
 
     .detail-wrapper{
       width:100%;

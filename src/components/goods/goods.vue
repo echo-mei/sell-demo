@@ -2,7 +2,7 @@
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   		<ul class="menu-main">
-  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIdex === index}" @click="selectMenu(index)">
+  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIdex === index}" @click="selectMenu(index,$event)">
   				<span class="text">
   					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
   				{{item.name}}</span>
@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      goods: {},
+      goods: [],
       classMap: [],
       listHeight: [],
       srcollY: 0
@@ -71,8 +71,10 @@ export default {
       response = response.body
       if (response.errno === ERR_OK) {
         this.goods = response.data
-        this._initScroll()
-        this._calculateHeight()
+        this.$nextTick(() => {
+          this._initScroll()
+          this._calculateHeight()
+        })
       }
     }, response => {
       // error callback
@@ -83,7 +85,7 @@ export default {
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i]
         let height2 = this.listHeight[i + 1]
-        if (!height2 || (this.srcollY > height1 && this.srcollY < height2)) {
+        if (this.srcollY > height1 && this.srcollY < height2) {
           return i
         }
       }
@@ -109,24 +111,26 @@ export default {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let el = foodList[index]
       this.foodScroll.scrollToElement(el, 300)
+      console.log(this.currentIdex)
     },
     _initScroll () {
-      this.$nextTick(() => {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
-        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
-
+        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {click: true, probeType: 3})
+        this.foodScroll.on('srcollStart', (pos) => {
+           console.log('srcollStart')
+        })
         this.foodScroll.on('srcoll', (pos) => {
+          console.log(111)
           this.srcollY = Math.abs(Math.round(pos.y))
           console.log(this.srcollY)
         })
-      })
     },
     _calculateHeight () {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let height = 0
       this.listHeight.push(height)
       for (let i = 0; i < foodList.length; i++) {
-        height += foodList[i]
+        height += foodList[i].clientHeight
         this.listHeight.push(height)
       }
     }
