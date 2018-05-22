@@ -67,6 +67,7 @@ export default {
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     // GET /someUrl
     this.$http.get('/api/goods').then(response => {
+      console.log(1)
       // get body data
       response = response.body
       if (response.errno === ERR_OK) {
@@ -91,13 +92,16 @@ export default {
     },
     selectFoods () {
       let selectFoods = []
-      this.goods.forEach((good) => {
-        good.foods.forEach((food) => {
-          if (food.count) {
-            selectFoods.push(food)
-          }
+      console.log(2, this.goods)
+      if (this.goods.length > 0) {
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              selectFoods.push(food)
+            }
+          })
         })
-      })
+      }
       return selectFoods
     }
   },

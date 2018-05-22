@@ -3,7 +3,7 @@
     <div class="content">
       <div class="content-left">
         <div class="logo-wrapper">
-          <div class="logo" :class="{active:selectFoods.length>0}">
+          <div class="logo" :class="{active:selectFoods.length>0}" @click="detailChange">
             <i class="icon-shopping_cart"></i>
             <span class="num" v-if="totalCount>0">{{totalCount}}</span>
           </div>
@@ -15,13 +15,26 @@
         {{payDesc}}
       </div>
     </div>
-    <div class=""></div>
+    <div v-show="isShowDetail" class="cart-detail-wrap">
+     <div class="cart-detail-main">
+      <div class="title">购物车<button class="clear">清空</button></div>
+      <ul class="cart-detail">
+        <li v-for="(food in selectFoods" class="cart-detail-item">
+          <span class="text">{{food.name}}</span>
+          <span class="price">￥{{food.price*food.count}}</span>
+          <div class="cartcontrol-wrapper">
+            <cartcontrol :food="food"></cartcontrol>
+          </div>
+        </li>
+      </ul>
+     </div>
+    </div>
   </div>
 </template>
 <script type="text/babel">
+import cartcontrol from '../cartcontrol/cartcontrol'
 
 export default {
-  // props: ['seller']
   props: {
     selectFoods: {
       type: Array,
@@ -43,6 +56,7 @@ export default {
   },
   data () {
     return {
+      isShowDetail: false
     }
   },
   computed: {
@@ -69,6 +83,16 @@ export default {
         return '去结算'
       }
     }
+  },
+  methods: {
+    detailChange () {
+      if (this.selectFoods.length > 0) {
+          this.isShowDetail = !this.isShowDetail
+      }
+    }
+  },
+  components: {
+    'cartcontrol': cartcontrol
   }
 }
 </script>
@@ -169,6 +193,80 @@ export default {
         color:#fff;
       }
     }
+  }
+
+  .cart-detail-wrap{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:48px;
+    width:100%;
+    background:rgba(7,17,27,0.8);
+    text-align:left;
+    z-index:-1;
+
+    .cart-detail-main{
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      background:#fff;
+      padding-bottom:20px;
+
+      .title{
+        box-sizing:border-box;
+        width:100%;
+        height:40px;
+        font-size:14px;
+        color:rgb(7,17,27);
+        font-weight:200;
+        line-height:40px;
+        padding:0 18px;
+        background:#f3f5f7;
+        border-bottom:1px solid rgba(7,17,27,.1);
+
+        .clear{
+          float:right;
+          border:none;
+          color:rgb(0,160,220);
+          font-size:12px;
+          line-height:40px;
+          background:transparent;
+        }
+      }
+      .cart-detail{
+        margin:0 18px;
+
+        .cart-detail-item{
+          position:relative;
+          height:48px;
+          line-height:48px;
+          border-bottom:1px solid rgba(7,17,27,.1);
+
+          .text{
+            font-size:14px;
+            font-weight:700;
+            color:#07111b;
+            line-height:48px;
+          }
+          .price{
+            position:absolute;
+            right:95px;
+            margin-left:18px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f01414;
+          }
+          .cartcontrol-wrapper{
+            position:absolute;
+            right:0;
+            top:0;
+          }
+        }
+      }
+    }
+
+
   }
 }
 </style>
