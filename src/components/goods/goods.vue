@@ -2,7 +2,7 @@
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   		<ul class="menu-main">
-  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIdex === index}" @click="selectMenu(index)">
+  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex === index}" @click="selectMenu(index)">
   				<span class="text">
   					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
   				{{item.name}}</span>
@@ -67,24 +67,27 @@ export default {
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     // GET /someUrl
     this.$http.get('/api/goods').then(response => {
-      console.log(1)
+      // console.log(1)
       // get body data
       response = response.body
       if (response.errno === ERR_OK) {
         this.goods = response.data
-        this._initScroll()
-        this._calculateHeight()
+
+        this.$nextTick(() => {
+           this._initScroll()
+           this._calculateHeight()
+        })
       }
     }, response => {
       // error callback
     })
   },
   computed: {
-    currentIdex () {
+    currentIndex () {
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i]
         let height2 = this.listHeight[i + 1]
-        if (!height2 || (this.srcollY > height1 && this.srcollY < height2)) {
+        if (height2 && (this.srcollY >= height1 && this.srcollY < height2)) {
           return i
         }
       }
@@ -92,7 +95,7 @@ export default {
     },
     selectFoods () {
       let selectFoods = []
-      console.log(2, this.goods)
+      // console.log(2, this.goods)
       if (this.goods.length > 0) {
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
@@ -106,7 +109,7 @@ export default {
     }
   },
   methods: {
-    selectMenu (index, event) {
+    selectMenu (index) {
       if (!event._constructed) {
         return
       }
@@ -115,22 +118,19 @@ export default {
       this.foodScroll.scrollToElement(el, 300)
     },
     _initScroll () {
-      this.$nextTick(() => {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
         this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
 
-        this.foodScroll.on('srcoll', (pos) => {
+        this.foodScroll.on('scroll', (pos) => {
           this.srcollY = Math.abs(Math.round(pos.y))
-          console.log(this.srcollY)
         })
-      })
     },
     _calculateHeight () {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let height = 0
       this.listHeight.push(height)
       for (let i = 0; i < foodList.length; i++) {
-        height += foodList[i]
+        height += foodList[i].offsetHeight
         this.listHeight.push(height)
       }
     }
@@ -235,7 +235,7 @@ export default {
 					border-bottom:1px solid rgba(7,17,27,.1);
 					text-align:left;
 
-					&::last-of-type{border:none;}
+					&:last-of-type{border:none;}
 
 					.avatar{
 						flex:0 0 57px;
