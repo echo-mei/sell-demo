@@ -3,7 +3,7 @@
     <div class="content">
       <div class="content-left">
         <div class="logo-wrapper">
-          <div class="logo" :class="{active:selectFoods.length>0}" @click="detailChange">
+          <div class="logo" :class="{active:tmp_selectFoods.length>0}" @click="detailChange">
             <i class="icon-shopping_cart"></i>
             <span class="num" v-if="totalCount>0">{{totalCount}}</span>
           </div>
@@ -15,23 +15,26 @@
         {{payDesc}}
       </div>
     </div>
-    <div v-show="isShowDetail" class="cart-detail-wrap">
+    <div class="cart-detail-wrap" v-show="detailShow" >
      <div class="cart-detail-main">
-      <div class="title">购物车<button class="clear">清空</button></div>
-      <ul class="cart-detail">
-        <li v-for="(food in selectFoods" class="cart-detail-item">
-          <span class="text">{{food.name}}</span>
-          <span class="price">￥{{food.price*food.count}}</span>
-          <div class="cartcontrol-wrapper">
-            <cartcontrol :food="food"></cartcontrol>
-          </div>
-        </li>
-      </ul>
+      <div class="title">购物车<button class="clear" @click="clearCart">清空</button></div>
+      <div class="cart-detail" ref="cartDetail">
+        <ul class="cart-detail-ul">
+          <li v-for="(food in selectFoods" class="cart-detail-item">
+            <span class="text">{{food.name}}</span>
+            <span class="price">￥{{food.price*food.count}}</span>
+            <div class="cartcontrol-wrapper">
+              <cartcontrol :food="food"></cartcontrol>
+            </div>
+          </li>
+        </ul>
+      </div>
      </div>
     </div>
   </div>
 </template>
 <script type="text/babel">
+import BScroll from 'better-scroll'
 import cartcontrol from '../cartcontrol/cartcontrol'
 
 export default {
@@ -56,20 +59,26 @@ export default {
   },
   data () {
     return {
+      tmp_selectFoods: this.selectFoods,
       isShowDetail: false
+    }
+  },
+  watch: {
+    tmp_selectFoods (val) {
+      this.$emit('update:selectFoods', val)
     }
   },
   computed: {
     totalPrice () {
       let sum = 0
-      this.selectFoods.forEach((food) => {
+      this.tmp_selectFoods.forEach((food) => {
         sum += food.price * food.count
       })
       return sum
     },
     totalCount () {
       let count = 0
-      this.selectFoods.forEach((food) => {
+      this.tmp_selectFoods.forEach((food) => {
         count += food.count
       })
       return count
@@ -82,6 +91,21 @@ export default {
       } else {
         return '去结算'
       }
+    },
+    detailShow () {
+      if (!this.isShowDetail || this.totalCount <= 0) {
+        return false
+      }
+      if (this.isShowDetail) {
+        this.$nextTick(() => {
+          if (!this.cartScroll) {
+            this.cartScroll = new BScroll(this.$refs.cartDetail, {click: true})
+          } else {
+            this.cartScroll.refresh()
+          }
+        })
+      }
+      return true
     }
   },
   methods: {
@@ -89,6 +113,9 @@ export default {
       if (this.selectFoods.length > 0) {
           this.isShowDetail = !this.isShowDetail
       }
+    },
+    clearCart () {
+      this.tmp_selectFoods = []
     }
   },
   components: {
@@ -211,7 +238,6 @@ export default {
       left:0;
       width:100%;
       background:#fff;
-      padding-bottom:20px;
 
       .title{
         box-sizing:border-box;
@@ -235,32 +261,36 @@ export default {
         }
       }
       .cart-detail{
-        margin:0 18px;
+        max-height:217px;
+        padding-bottom:20px;
 
-        .cart-detail-item{
-          position:relative;
-          height:48px;
-          line-height:48px;
-          border-bottom:1px solid rgba(7,17,27,.1);
-
-          .text{
-            font-size:14px;
-            font-weight:700;
-            color:#07111b;
+        .cart-detail-ul{
+          margin:0 18px;
+          .cart-detail-item{
+            position:relative;
+            height:48px;
             line-height:48px;
-          }
-          .price{
-            position:absolute;
-            right:95px;
-            margin-left:18px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #f01414;
-          }
-          .cartcontrol-wrapper{
-            position:absolute;
-            right:0;
-            top:0;
+            border-bottom:1px solid rgba(7,17,27,.1);
+
+            .text{
+              font-size:14px;
+              font-weight:700;
+              color:#07111b;
+              line-height:48px;
+            }
+            .price{
+              position:absolute;
+              right:95px;
+              margin-left:18px;
+              font-size: 14px;
+              font-weight: 700;
+              color: #f01414;
+            }
+            .cartcontrol-wrapper{
+              position:absolute;
+              right:0;
+              top:0;
+            }
           }
         }
       }

@@ -117,7 +117,6 @@ export default {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let el = foodList[index]
       this.foodScroll.scrollToElement(el, 300)
-      console.log(this.currentIdex)
     },
     _initScroll () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
