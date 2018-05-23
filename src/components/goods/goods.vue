@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      goods: {},
+      goods: [],
       classMap: [],
       listHeight: [],
       srcollY: 0
@@ -87,6 +87,7 @@ export default {
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i]
         let height2 = this.listHeight[i + 1]
+
         if (height2 && (this.srcollY >= height1 && this.srcollY < height2)) {
           return i
         }
@@ -116,6 +117,7 @@ export default {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let el = foodList[index]
       this.foodScroll.scrollToElement(el, 300)
+      console.log(this.currentIdex)
     },
     _initScroll () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
@@ -130,7 +132,7 @@ export default {
       let height = 0
       this.listHeight.push(height)
       for (let i = 0; i < foodList.length; i++) {
-        height += foodList[i].offsetHeight
+        height += foodList[i].clientHeight
         this.listHeight.push(height)
       }
     }
