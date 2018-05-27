@@ -1,9 +1,9 @@
 <template>
   <div class="shopcart">
     <div class="content">
-      <div class="content-left">
+      <div class="content-left" @click="detailChange">
         <div class="logo-wrapper">
-          <div class="logo" :class="{active:tmp_selectFoods.length>0}" @click="detailChange">
+          <div class="logo" :class="{active:selectFoods.length>0}">
             <i class="icon-shopping_cart"></i>
             <span class="num" v-if="totalCount>0">{{totalCount}}</span>
           </div>
@@ -31,7 +31,9 @@
       </div>
      </div>
     </div>
+    <div class="cart-mask" v-show="detailShow" @click="detailChange"></div>
   </div>
+ 
 </template>
 <script type="text/babel">
 import BScroll from 'better-scroll'
@@ -59,26 +61,20 @@ export default {
   },
   data () {
     return {
-      tmp_selectFoods: this.selectFoods,
       isShowDetail: false
-    }
-  },
-  watch: {
-    tmp_selectFoods (val) {
-      this.$emit('update:selectFoods', val)
     }
   },
   computed: {
     totalPrice () {
       let sum = 0
-      this.tmp_selectFoods.forEach((food) => {
+      this.selectFoods.forEach((food) => {
         sum += food.price * food.count
       })
       return sum
     },
     totalCount () {
       let count = 0
-      this.tmp_selectFoods.forEach((food) => {
+      this.selectFoods.forEach((food) => {
         count += food.count
       })
       return count
@@ -115,7 +111,9 @@ export default {
       }
     },
     clearCart () {
-      this.tmp_selectFoods = []
+      this.selectFoods.forEach((food) => {
+        food.count = 0
+      })
     }
   },
   components: {
@@ -155,6 +153,7 @@ export default {
         border-radius:50%;
         background:#141d27;
         text-align: center;
+        z-index:5;
         .logo{
           width:100%;
           height:100%;
@@ -222,81 +221,80 @@ export default {
     }
   }
 
-  .cart-detail-wrap{
+  .cart-detail-main{
+    position: absolute;
+    left: 0;
+    bottom: 48px;
+    z-index: 3;
+    width: 100%;
+    background: #fff;
+    text-align: left;
+
+    .title{
+      box-sizing:border-box;
+      width:100%;
+      height:40px;
+      font-size:14px;
+      color:rgb(7,17,27);
+      font-weight:200;
+      line-height:40px;
+      padding:0 18px;
+      background:#f3f5f7;
+      border-bottom:1px solid rgba(7,17,27,.1);
+
+      .clear{
+        float:right;
+        border:none;
+        color:rgb(0,160,220);
+        font-size:12px;
+        line-height:40px;
+        background:transparent;
+      }
+    }
+    .cart-detail{
+      max-height:217px;
+      padding-bottom:20px;
+
+      .cart-detail-ul{
+        margin:0 18px;
+        .cart-detail-item{
+          position:relative;
+          height:48px;
+          line-height:48px;
+          border-bottom:1px solid rgba(7,17,27,.1);
+
+          .text{
+            font-size:14px;
+            font-weight:700;
+            color:#07111b;
+            line-height:48px;
+          }
+          .price{
+            position:absolute;
+            right:95px;
+            margin-left:18px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f01414;
+          }
+          .cartcontrol-wrapper{
+            position:absolute;
+            right:0;
+            top:0;
+          }
+        }
+      }
+    }
+  }
+}
+.cart-mask{
     position:fixed;
     top:0;
     left:0;
     bottom:48px;
     width:100%;
     background:rgba(7,17,27,0.8);
-    text-align:left;
-    z-index:-1;
-
-    .cart-detail-main{
-      position:absolute;
-      bottom:0;
-      left:0;
-      width:100%;
-      background:#fff;
-
-      .title{
-        box-sizing:border-box;
-        width:100%;
-        height:40px;
-        font-size:14px;
-        color:rgb(7,17,27);
-        font-weight:200;
-        line-height:40px;
-        padding:0 18px;
-        background:#f3f5f7;
-        border-bottom:1px solid rgba(7,17,27,.1);
-
-        .clear{
-          float:right;
-          border:none;
-          color:rgb(0,160,220);
-          font-size:12px;
-          line-height:40px;
-          background:transparent;
-        }
-      }
-      .cart-detail{
-        max-height:217px;
-        padding-bottom:20px;
-
-        .cart-detail-ul{
-          margin:0 18px;
-          .cart-detail-item{
-            position:relative;
-            height:48px;
-            line-height:48px;
-            border-bottom:1px solid rgba(7,17,27,.1);
-
-            .text{
-              font-size:14px;
-              font-weight:700;
-              color:#07111b;
-              line-height:48px;
-            }
-            .price{
-              position:absolute;
-              right:95px;
-              margin-left:18px;
-              font-size: 14px;
-              font-weight: 700;
-              color: #f01414;
-            }
-            .cartcontrol-wrapper{
-              position:absolute;
-              right:0;
-              top:0;
-            }
-          }
-        }
-      }
-    }
-
-
-  }
+    backdrop-filter: blur(10px);
+    z-index:2;
 }
 </style>
