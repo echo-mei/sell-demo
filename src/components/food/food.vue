@@ -20,7 +20,7 @@
         </div>
         <div class="add-cart-wrap">
           <cartcontrol :food="selectFood" v-if="selectFood.count>0"></cartcontrol>
-          <button class="add-cart" v-else="selectFood.count!=undefined || selectFood.count===0" @click="addCart">加入购物车</button>
+          <button class="add-cart" v-else="!selectFood.count || selectFood.count===0" @click="addCart">加入购物车</button>
         </div>
       </div>
     </div>
@@ -70,7 +70,13 @@ export default {
   data () {
     return {
       showFood: false,
-      rateType: ['icon-thumb_up', 'icon-thumb_down']
+      rateType: ['icon-thumb_up', 'icon-thumb_down'],
+      tem_ratings: this.selectFood.ratings
+    }
+  },
+  computed: {
+    getRatings () {
+      return this.selectFood.ratings
     }
   },
   created () {
