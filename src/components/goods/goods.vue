@@ -31,7 +31,7 @@
 	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
 	        				<div class="cartcontrol-wrapper">
-	        					<cartcontrol :food="food"></cartcontrol>
+	        					<cartcontrol :food="food" v-on:add-cart="addCart($event)"></cartcontrol>
 	        				</div>
 	        			</div>
 	  				</li>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import BScroll from 'better-scroll'
 import shopcart from '../shopcart/shopcart'
 import cartcontrol from '../cartcontrol/cartcontrol'
@@ -99,7 +100,6 @@ export default {
     },
     selectFoods () {
       let selectFoods = []
-      // console.log(2, this.goods)
       if (this.goods.length > 0) {
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
@@ -124,6 +124,20 @@ export default {
     showFoodDetail (food) {
       this.selectFood = food
       this.$refs.food.show()
+    },
+    addCart (obj) {
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food === obj) {
+            if (!food.count) {
+              Vue.set(food, 'count', 1)
+            } else {
+              food.count++
+            }
+            return
+          }
+        })
+      })
     },
     _initScroll () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})

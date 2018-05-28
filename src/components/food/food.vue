@@ -19,8 +19,8 @@
           <span class="oldprice" v-show="selectFood.oldPrice!=''">￥{{selectFood.oldPrice}}</span>
         </div>
         <div class="add-cart-wrap">
-          <cartcontrol :food="selectFood" v-if="selectFood.count>0"></cartcontrol>
-          <button class="add-cart" v-else="!selectFood.count || selectFood.count===0" @click="addCart">加入购物车</button>
+          <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart($event)"></cartcontrol>
+          <button class="add-cart" v-else="!selectFood.count || selectFood.count===0" @click="addFirst">加入购物车</button>
         </div>
       </div>
     </div>
@@ -31,16 +31,16 @@
     <div class="food-cont padding18">
       <div class="cont-title">商品评价</div>
       <div class="rating-classify">
-        <button class="all">全部<span>57</span></button>
-        <button class="recommend">推荐<span>47</span></button>
-        <button class="tucao">吐槽<span>10</span></button>
+        <button class="all" @click="showRatingsAll">全部<span>57</span></button>
+        <button class="recommend" @click="showRatingsTJ">推荐<span>47</span></button>
+        <button class="tucao" @click="showRatingsTC">吐槽<span>10</span></button>
       </div>
       <div class="rating-filter">
         <span class="icon-check_circle"></span>
         <span class="text">只看有内容的评价</span>
       </div>
       <ul class="rating-list">
-        <li v-for="item in selectFood.ratings" class="rating-item">
+        <li v-for="item in getRatings" class="rating-item">
           <div class="rating-title">
             <span class="time">{{item.rateTime}}</span>
             <span class="user">{{item.username}}</span>
@@ -70,8 +70,7 @@ export default {
   data () {
     return {
       showFood: false,
-      rateType: ['icon-thumb_up', 'icon-thumb_down'],
-      tem_ratings: this.selectFood.ratings
+      rateType: ['icon-thumb_up', 'icon-thumb_down']
     }
   },
   computed: {
@@ -89,7 +88,7 @@ export default {
     hide () {
       this.showFood = false
     },
-    addCart () {
+    addFirst () {
       if (!event._constructed) {
         return
       }
@@ -99,7 +98,20 @@ export default {
         this.selectFood.count++
       }
     },
-     _initScroll () {
+    showRatingsAll () {
+    },
+    showRatingsTJ () {
+    },
+    showRatingsTC () {
+    },
+    addCart (obj) {
+      if (!this.selectFood.count) {
+        Vue.set(this.selectFood, 'count', 1)
+      } else {
+        this.selectFood.count++
+      }
+    },
+    _initScroll () {
       this.$nextTick(() => {
         if (!this.foodDetailScroll) {
           this.foodDetailScroll = new BScroll(this.$refs.foodDetail, {click: true})
