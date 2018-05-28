@@ -80,33 +80,33 @@ export default {
     }
   },
   created () {
-    this.$nextTick(() => {
-      if (!this.foodDetailScroll) {
-        this.foodDetailScroll = new BScroll(this.$refs.foodDetail, {click: true})
-      } else {
-        this.foodDetailScroll.refresh()
-      }
-    })
   },
   methods: {
     show () {
       this.showFood = true
+      this._initScroll()
     },
     hide () {
       this.showFood = false
     },
     addCart () {
-      console.log(event, 'click')
       if (!event._constructed) {
         return
       }
-      console.log(1, this.selectFood.count)
       if (!this.selectFood.count) {
         Vue.set(this.selectFood, 'count', 1)
       } else {
         this.selectFood.count++
       }
-      console.log(2, this.selectFood.count)
+    },
+     _initScroll () {
+      this.$nextTick(() => {
+        if (!this.foodDetailScroll) {
+          this.foodDetailScroll = new BScroll(this.$refs.foodDetail, {click: true})
+        } else {
+          this.foodDetailScroll.refresh()
+        }
+      })
     }
   },
   components: {
