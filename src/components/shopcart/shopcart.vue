@@ -111,9 +111,7 @@ export default {
       }
     },
     clearCart () {
-      this.selectFoods.forEach((food) => {
-        food.count = 0
-      })
+      this.$emit('clear-cart', this.food)
     }
   },
   components: {

@@ -12,7 +12,7 @@
     <ul class="rating-list">
       <li v-for="item in getRatings" class="rating-item">
         <div class="rating-title">
-          <span class="time">{{item.rateTime}}</span>
+          <span class="time">{{item.rateTime | formatDate}}</span>
           <span class="user">{{item.username}}</span>
           <div class="avatar"><img :src="item.avatar"></div>
         </div>
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script type="text/babel">
-
+import {formatDate} from '../../common/date.js'
 export default {
   props: {
     ratings: {
@@ -36,6 +36,12 @@ export default {
     return {
       rateType: ['icon-thumb_up', 'icon-thumb_down'],
       fiter: 0
+    }
+  },
+  filters: {
+    formatDate (time) {
+      var date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
     }
   },
   computed: {

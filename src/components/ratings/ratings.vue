@@ -11,20 +11,18 @@
 	     	<div class="score">
 	     		<span class="text">服务态度</span>
 		     	<div class="star-wrap">
-		          	<star :size="36" :score="seller.serviceScore"></star>
-		        </div>
+		          <star :size="36" :score="seller.serviceScore"></star>
+		      </div>
+	      </div>
+        <div class="score">
+        	<span class="text">食品评分</span>
+	     	  <div class="star-wrap">
+	          <star :size="36" :score="seller.foodScore"></star>
 	        </div>
-	        <div class="score">
-	        	<span class="text">食品评分</span>
-		     	<div class="star-wrap">
-		          	<star :size="36" :score="seller.foodScore"></star>
-		        </div>
-	        </div>
-	        <div class="score">
+        </div>
+	      <div class="score">
 	        	<span class="text">送达时间</span>
-		     	<div class="star-wrap delivery-time">
-		          	{{seller.deliveryTime}}
-		        </div>
+		     	  <div class="star-wrap delivery-time">{{seller.deliveryTime}}</div>
 		    </div>
 	  	</div>
     </div>
