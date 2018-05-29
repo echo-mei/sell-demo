@@ -1,11 +1,11 @@
 <template>
 <div class="seller-wrap" ref="sellerWrap">
   <div class="seller">
-    <div class="seller-cont seller-info">
+    <div class="seller-cont seller-title">
 	   <h1 class="title">{{seller.name}}</h1>
 	   <div class="seller-favtor">	   
-	   	  <i class="icon-favorite"></i>
-	   	  <p class="text">点击收藏</p>
+	   	  <i class="icon-favorite" :class="{'active':isfavorite}" @click="favorite"></i>
+	   	  <p class="text" ref="favoriteText">点击收藏</p>
 	   </div>
 	   <div class="star-wrap">
           <star :size="36" :score="seller.score"></star>
@@ -27,6 +27,18 @@
         </li>
       </ul>
     </div>
+    <div class="seller-cont seller-pics">
+       <h1 class="title">商家实景</h1>
+       <div class="pics-wrap" ref="picsWrap">
+        <div class="pics-content" ref="picsList"> <img v-for="pic in seller.pics" :src="pic"></div>
+       </div>
+    </div>
+    <div class="seller-cont seller-info">
+       <h1 class="title">商家信息</h1>
+       <ul v-if="seller.infos" class="infos-wrapper">
+        <li v-for="item in seller.infos" class="infos-item">{{item}}</li> 
+       </ul>
+    </div>
   </div>
 </div>
 </template>
@@ -42,15 +54,31 @@ export default {
   },
   data () {
     return {
-      classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special']
+      classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special'],
+      isfavorite: false
     }
   },
   created () {
-    this._initScroll()
   },
-  computed: {
+  watch: {
+    seller: function () {
+      this._initScroll()
+      this._initPics()
+    }
+  },
+  mounted: function () {
+    this._initScroll()
+    this._initPics()
   },
   methods: {
+    favorite () {
+      this.isfavorite = !this.isfavorite
+      if (this.isfavorite) {
+        this.$refs.favoriteText.innerHTML = '已收藏'
+      } else {
+        this.$refs.favoriteText.innerHTML = '点击收藏'
+      }
+    },
     _initScroll () {
       this.$nextTick(() => {
         if (!this.sellerScroll) {
@@ -59,6 +87,22 @@ export default {
           this.sellerScroll.refresh()
         }
       })
+    },
+    _initPics () {
+      if (this.seller.pics) {
+        console.log(4)
+        let imgWidth = 90
+        let imgMargin = 6
+        let width = (imgWidth + imgMargin) * this.seller.pics.length - imgMargin
+        this.$nextTick(() => {
+          this.$refs.picsList.style.width = width + 'px'
+          if (!this.picsScroll) {
+            this.picsScroll = new BScroll(this.$refs.picsWrap, {scrollX: true, eventPassthrough: 'vertical'})
+          } else {
+            this.picsScroll.refresh()
+          }
+        })
+      }
     }
   },
   components: {
@@ -92,7 +136,7 @@ export default {
     	margin-bottom:8px;
     }
   }
-  .seller-info{
+  .seller-title{
     position:relative;
 
     .seller-favtor{
@@ -100,11 +144,16 @@ export default {
     	right: 18px;
     	top: 18px;
     	text-align: center;
+      width:48px;
     	.icon-favorite{
     		margin-bottom:4px;
     		font-size:24px;
     		line-height:24px;
     		color:rgb(147,153,159);
+
+        &.active{
+          color:rgb(240,20,20)
+        }
     	}
     	.text{
     		font-size:10px;
@@ -122,9 +171,12 @@ export default {
     		color:rgb(77,85,93);
     	}
     }
+    .star-wrap /deep/ .star{
+      vertical-align: middle;
+    }
     .star-wrap /deep/.itemClass{
-		margin-right:6px;
-	}
+  		margin-right:6px;
+  	}
     .seller-detail{
     	display:flex;
     	border-top:1px solid rgba(7,17,27,.1);
@@ -155,6 +207,7 @@ export default {
   }
 
   .seller-bulletin{
+    padding-bottom:0;
   	.bulletin-detail{
   		padding:0 12px;
   		font-size:12px;
@@ -163,11 +216,11 @@ export default {
   		color:rgb(240,20,20);
   	}
   	.discount-wrapper{
-      margin:24px 12px;
+      margin-top:24px;
       font-size:0;
       .support-item{
         text-align:left;
-        padding:16px;
+        padding:16px 12px;
         border-top:1px solid rgba(7,17,27,.1);
         .icon{
           display:inline-block;
@@ -176,7 +229,6 @@ export default {
           height:16px;
           background-size: 100%;
           margin-right: 6px;
-          margin-left:12px;
         }
         .decrease{
           .bg-image('decrease_3');
@@ -201,6 +253,40 @@ export default {
           line-height:12px;
         }
       }          
+    }
+  }
+
+  .seller-pics{
+    .pics-wrap{
+      height:120px;
+      overflow:hidden;
+
+      img{
+        width:90px;
+        height:120px;
+        margin-right:6px;
+
+        &:last-of-type{
+          margin-right:0;
+        }
+      }
+    }
+  }
+
+  .seller-info{
+    padding-bottom:0;
+    .infos-wrapper{
+      text-align:left;
+
+      .infos-item{
+        text-align:left;
+        padding:16px 12px;
+        border-top:1px solid rgba(7,17,27,.1);
+        font-size:12px;
+        font-weight:200;
+        color:rgb(7,17,27);
+        line-height:16px;
+      }
     }
   }
 

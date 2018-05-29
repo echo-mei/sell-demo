@@ -71,7 +71,6 @@ export default {
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     // GET /someUrl
     this.$http.get('/api/goods').then(response => {
-      // console.log(1)
       // get body data
       response = response.body
       if (response.errno === ERR_OK) {
@@ -337,7 +336,7 @@ export default {
 						.cartcontrol-wrapper{
 							position:absolute;
 							right:-10px;
-							bottom:-10px;
+							bottom:0;
 						}
 					}
 				}

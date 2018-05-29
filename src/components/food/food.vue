@@ -20,7 +20,7 @@
         </div>
         <div class="add-cart-wrap">
           <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></cartcontrol>
-          <button class="add-cart" v-else="!selectFood.count || selectFood.count===0" @click.stop.prevent="addFirst">加入购物车</button>
+          <div class="add-cart" type="button" v-else="!selectFood.count || selectFood.count===0" @click.stop.prevent="addCart($event)">加入购物车</div>
         </div>
       </div>
     </div>
@@ -96,22 +96,14 @@ export default {
         this.fiter = 3
       }
     },
-    addFirst () {
-      if (!event._constructed) {
-        return
-      }
-      this.$emit('add-cart', this.selectFood)
-    },
     addCart (obj) {
+      console.log('addCart')
       if (!event._constructed) {
         return
       }
       this.$emit('add-cart', this.selectFood)
     },
-    removeCart (obj) {
-      if (!event._constructed) {
-        return
-      }
+    removeCart (event) {
       this.$emit('remove-cart', this.selectFood)
     },
     _initScroll () {
@@ -209,6 +201,8 @@ export default {
           background:rgb(0,160,220);
           border-radius:12px;
           font-size:10px;
+          line-height:24px;
+          text-align:center;
           color:#fff;
         }
       }

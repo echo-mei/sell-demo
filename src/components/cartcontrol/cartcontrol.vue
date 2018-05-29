@@ -31,7 +31,7 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.$emit('remove-cart')
+      this.$emit('remove-cart', this.food)
     }
   }
 }
@@ -46,7 +46,7 @@ export default {
     font-size:24px;
     line-height:24px;
     vertical-align: middle;
-    margin:10px;
+    margin:0 10px;
   }
   .cart-count{
     display:inline-block;
@@ -60,7 +60,7 @@ export default {
     font-size:24px;
     line-height:24px;
     vertical-align: middle;
-    margin:10px;
+    margin:0 10px;
   }
 }
 </style>

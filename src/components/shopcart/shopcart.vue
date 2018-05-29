@@ -111,7 +111,7 @@ export default {
       }
     },
     clearCart () {
-      this.$emit('clear-cart', this.food)
+      this.$emit('clear-cart')
     }
   },
   components: {
