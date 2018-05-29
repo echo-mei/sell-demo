@@ -19,7 +19,7 @@
           <span class="oldprice" v-show="selectFood.oldPrice!=''">￥{{selectFood.oldPrice}}</span>
         </div>
         <div class="add-cart-wrap">
-          <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart($event)"></cartcontrol>
+          <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></cartcontrol>
           <button class="add-cart" v-else="!selectFood.count || selectFood.count===0" @click.stop.prevent="addFirst">加入购物车</button>
         </div>
       </div>
@@ -36,7 +36,6 @@
 </div>
 </template>
 <script type="text/babel">
-import Vue from 'vue'
 import BScroll from 'better-scroll'
 import cartcontrol from '../cartcontrol/cartcontrol'
 import ratingslist from '../ratingslist/ratingslist'
@@ -81,17 +80,6 @@ export default {
     hide () {
       this.showFood = false
     },
-    addFirst () {
-      console.log(1)
-      if (!event._constructed) {
-        return
-      }
-      if (!this.selectFood.count) {
-        Vue.set(this.selectFood, 'count', 1)
-      } else {
-        this.selectFood.count++
-      }
-    },
     showRatingsAll () {
       this.fiter = 0
     },
@@ -108,13 +96,23 @@ export default {
         this.fiter = 3
       }
     },
-    addCart (obj) {
-      console.log(2)
-      if (!this.selectFood.count) {
-        Vue.set(this.selectFood, 'count', 1)
-      } else {
-        this.selectFood.count++
+    addFirst () {
+      if (!event._constructed) {
+        return
       }
+      this.$emit('add-cart', this.selectFood)
+    },
+    addCart (obj) {
+      if (!event._constructed) {
+        return
+      }
+      this.$emit('add-cart', this.selectFood)
+    },
+    removeCart (obj) {
+      if (!event._constructed) {
+        return
+      }
+      this.$emit('remove-cart', this.selectFood)
     },
     _initScroll () {
       this.$nextTick(() => {

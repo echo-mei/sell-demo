@@ -31,9 +31,7 @@ export default {
       if (!event._constructed) {
         return
       }
-      if (this.food.count) {
-        this.food.count--
-      }
+      this.$emit('remove-cart')
     }
   }
 }

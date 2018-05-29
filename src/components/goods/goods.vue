@@ -31,7 +31,7 @@
 	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
 	        				<div class="cartcontrol-wrapper">
-	        					<cartcontrol :food="food" v-on:add-cart="addCart($event)"></cartcontrol>
+	        					<cartcontrol :food="food" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></cartcontrol>
 	        				</div>
 	        			</div>
 	  				</li>
@@ -39,8 +39,8 @@
   			</li>
   		</ul>
   	</div>
-  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
-  	<food :select-food="selectFood" ref="food"></food>
+  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" v-on:clear-cart="clearCart($event)"></shopcart>
+  	<food :select-food="selectFood" ref="food" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></food>
   </div>
 </template>
 
@@ -135,6 +135,25 @@ export default {
               food.count++
             }
             return
+          }
+        })
+      })
+    },
+    removeCart (obj) {
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food === obj) {
+            food.count --
+            return
+          }
+        })
+      })
+    },
+    clearCart () {
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            food.count = 0
           }
         })
       })
