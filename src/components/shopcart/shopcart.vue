@@ -20,11 +20,11 @@
       <div class="title">购物车<button class="clear" @click="clearCart">清空</button></div>
       <div class="cart-detail" ref="cartDetail">
         <ul class="cart-detail-ul">
-          <li v-for="(food in selectFoods" class="cart-detail-item">
+          <li v-for="food in selectFoods" class="cart-detail-item">
             <span class="text">{{food.name}}</span>
             <span class="price">￥{{food.price*food.count}}</span>
             <div class="cartcontrol-wrapper">
-              <cartcontrol :food="food"></cartcontrol>
+              <cartcontrol :food="food" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
             </div>
           </li>
         </ul>
@@ -110,7 +110,17 @@ export default {
           this.isShowDetail = !this.isShowDetail
       }
     },
+    addCart (obj) {
+      if (!event._constructed) {
+        return
+      }
+      this.$emit('add-cart', obj)
+    },
+    removeCart (obj) {
+      this.$emit('remove-cart', obj)
+    },
     clearCart () {
+      this.isShowDetail = false
       this.$emit('clear-cart')
     }
   },
