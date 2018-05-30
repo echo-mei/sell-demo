@@ -31,7 +31,7 @@
 	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
 	        				<div class="cartcontrol-wrapper">
-	        					<cartcontrol :food="food" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></cartcontrol>
+	        					<cartcontrol :food="food" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
 	        				</div>
 	        			</div>
 	  				</li>
@@ -39,28 +39,28 @@
   			</li>
   		</ul>
   	</div>
-  	<shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" v-on:clear-cart="clearCart($event)"></shopcart>
   	<food :select-food="selectFood" ref="food" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></food>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import BScroll from 'better-scroll'
-import shopcart from '../shopcart/shopcart'
 import cartcontrol from '../cartcontrol/cartcontrol'
 import food from '../food/food'
 
-const ERR_OK = 0
+// const ERR_OK = 0
 export default {
   props: {
     seller: {
       type: Object
+    },
+    goods: {
+      type: Array
     }
   },
   data () {
     return {
-      goods: [],
       classMap: [],
       listHeight: [],
       srcollY: 0,
@@ -70,19 +70,33 @@ export default {
   created () {
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     // GET /someUrl
-    this.$http.get('/api/goods').then(response => {
-      // get body data
-      response = response.body
-      if (response.errno === ERR_OK) {
-        this.goods = response.data
+    // this.$http.get('/api/goods').then(response => {
+    //   // get body data
+    //   response = response.body
+    //   if (response.errno === ERR_OK) {
+    //     this.goods = response.data
 
-        this.$nextTick(() => {
+    //     this.$nextTick(() => {
+    //        this._initScroll()
+    //        this._calculateHeight()
+    //     })
+    //   }
+    // }, response => {
+    //   // error callback
+    // })
+  },
+  watch: {
+    goods: function () {
+      this.$nextTick(() => {
            this._initScroll()
            this._calculateHeight()
-        })
-      }
-    }, response => {
-      // error callback
+      })
+    }
+  },
+  mounted: function () {
+    this.$nextTick(() => {
+       this._initScroll()
+       this._calculateHeight()
     })
   },
   computed: {
@@ -96,19 +110,6 @@ export default {
         }
       }
       return 0
-    },
-    selectFoods () {
-      let selectFoods = []
-      if (this.goods.length > 0) {
-        this.goods.forEach((good) => {
-          good.foods.forEach((food) => {
-            if (food.count) {
-              selectFoods.push(food)
-            }
-          })
-        })
-      }
-      return selectFoods
     }
   },
   methods: {
@@ -125,37 +126,45 @@ export default {
       this.$refs.food.show()
     },
     addCart (obj) {
-      this.goods.forEach((good) => {
-        good.foods.forEach((food) => {
-          if (food === obj) {
-            if (!food.count) {
-              Vue.set(food, 'count', 1)
-            } else {
-              food.count++
-            }
-            return
-          }
-        })
-      })
+      // this.goods.forEach((good) => {
+      //   good.foods.forEach((food) => {
+      //     if (food === obj) {
+      //       if (!food.count) {
+      //         Vue.set(food, 'count', 1)
+      //       } else {
+      //         food.count++
+      //       }
+      //       return
+      //     }
+      //   })
+      // })
+      console.log('goods', 'addCart', 1, obj)
+      if (!event._constructed) {
+        return
+      }
+      console.log('goods', 'addCart', 2)
+      this.$emit('add-cart', obj)
     },
     removeCart (obj) {
-      this.goods.forEach((good) => {
-        good.foods.forEach((food) => {
-          if (food === obj) {
-            food.count --
-            return
-          }
-        })
-      })
+      // this.goods.forEach((good) => {
+      //   good.foods.forEach((food) => {
+      //     if (food === obj) {
+      //       food.count --
+      //       return
+      //     }
+      //   })
+      // })
+      this.$emit('remove-cart', obj)
     },
     clearCart () {
-      this.goods.forEach((good) => {
-        good.foods.forEach((food) => {
-          if (food.count) {
-            food.count = 0
-          }
-        })
-      })
+      // this.goods.forEach((good) => {
+      //   good.foods.forEach((food) => {
+      //     if (food.count) {
+      //       food.count = 0
+      //     }
+      //   })
+      // })
+      this.$emit('clear-cart')
     },
     _initScroll () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
@@ -176,7 +185,7 @@ export default {
     }
   },
   components: {
-    'shopcart': shopcart,
+    // 'shopcart': shopcart,
     'cartcontrol': cartcontrol,
     'food': food
   }

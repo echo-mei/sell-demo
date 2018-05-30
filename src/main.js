@@ -2,9 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from '@/router/index.js'
+import VueResource from 'vue-resource'
+import router from '@/router/router'
 import '@/common/less/index.less'
+import vueTap from 'v-tap'
 
+Vue.use(VueResource)
+Vue.use(vueTap)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

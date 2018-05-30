@@ -19,8 +19,8 @@
           <span class="oldprice" v-show="selectFood.oldPrice!=''">￥{{selectFood.oldPrice}}</span>
         </div>
         <div class="add-cart-wrap">
-          <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></cartcontrol>
-          <div class="add-cart" type="button" v-else="!selectFood.count || selectFood.count===0" @click.stop.prevent="addCart($event)">加入购物车</div>
+          <cartcontrol :food="selectFood" v-if="selectFood.count>0" v-on:add-cart="addCart(selectFood)" v-on:remove-cart="removeCart(selectFood)"></cartcontrol>
+          <div class="add-cart" type="button" v-else="!selectFood.count || selectFood.count===0" @click.stop.prevent="addCart(selectFood)">加入购物车</div>
         </div>
       </div>
     </div>
@@ -97,14 +97,13 @@ export default {
       }
     },
     addCart (obj) {
-      console.log('addCart')
       if (!event._constructed) {
         return
       }
-      this.$emit('add-cart', this.selectFood)
+      this.$emit('add-cart', obj)
     },
-    removeCart (event) {
-      this.$emit('remove-cart', this.selectFood)
+    removeCart (obj) {
+      this.$emit('remove-cart', obj)
     },
     _initScroll () {
       this.$nextTick(() => {

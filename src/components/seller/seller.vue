@@ -90,7 +90,6 @@ export default {
     },
     _initPics () {
       if (this.seller.pics) {
-        console.log(4)
         let imgWidth = 90
         let imgMargin = 6
         let width = (imgWidth + imgMargin) * this.seller.pics.length - imgMargin
