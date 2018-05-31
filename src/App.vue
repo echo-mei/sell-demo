@@ -69,7 +69,9 @@ export default {
   },
   methods: {
      addCart (obj) {
-       console.log('app', 'addCart', 1, obj)
+      if (!event._constructed) {
+        return
+      }
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food === obj) {
@@ -84,6 +86,9 @@ export default {
       })
     },
     removeCart (obj) {
+      if (!event._constructed) {
+        return
+      }
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food === obj) {
@@ -94,6 +99,9 @@ export default {
       })
     },
     clearCart () {
+      if (!event._constructed) {
+        return
+      }
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {

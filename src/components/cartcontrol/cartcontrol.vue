@@ -22,11 +22,9 @@ export default {
   },
   methods: {
     addCart (event) {
-      console.log('cartcontrol', 'addCart', 1)
       if (!event._constructed) {
         return
       }
-       console.log('cartcontrol', 'addCart', 2)
       this.$emit('add-cart', this.food)
     },
     removeCart (event) {

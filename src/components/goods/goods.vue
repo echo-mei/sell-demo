@@ -19,7 +19,7 @@
 	        				<img :src="food.image">
 	      				</div>
 	      				<div class="content">
-	        				<div class="name">{{food.name}}</div>
+	        				<div class="name" @click.stop.prevent="test">{{food.name}}</div>
 	        				<div v-show="food.description!=''" class="description">{{food.description}}</div>
 	        				<div class="sales-performance">
 	        					<span class="salenum">月售{{food.sellCount}}份</span>
@@ -44,12 +44,10 @@
 </template>
 
 <script>
-// import Vue from 'vue'
 import BScroll from 'better-scroll'
 import cartcontrol from '../cartcontrol/cartcontrol'
 import food from '../food/food'
 
-// const ERR_OK = 0
 export default {
   props: {
     seller: {
@@ -69,27 +67,12 @@ export default {
   },
   created () {
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
-    // GET /someUrl
-    // this.$http.get('/api/goods').then(response => {
-    //   // get body data
-    //   response = response.body
-    //   if (response.errno === ERR_OK) {
-    //     this.goods = response.data
-
-    //     this.$nextTick(() => {
-    //        this._initScroll()
-    //        this._calculateHeight()
-    //     })
-    //   }
-    // }, response => {
-    //   // error callback
-    // })
   },
   watch: {
     goods: function () {
       this.$nextTick(() => {
-           this._initScroll()
-           this._calculateHeight()
+          this._initScroll()
+          this._calculateHeight()
       })
     }
   },
@@ -113,6 +96,12 @@ export default {
     }
   },
   methods: {
+    test () {
+      if (!event._constructed) {
+        return
+      }
+      console.log('click', event)
+    },
     selectMenu (index) {
       if (!event._constructed) {
         return
@@ -126,53 +115,37 @@ export default {
       this.$refs.food.show()
     },
     addCart (obj) {
-      // this.goods.forEach((good) => {
-      //   good.foods.forEach((food) => {
-      //     if (food === obj) {
-      //       if (!food.count) {
-      //         Vue.set(food, 'count', 1)
-      //       } else {
-      //         food.count++
-      //       }
-      //       return
-      //     }
-      //   })
-      // })
-      console.log('goods', 'addCart', 1, obj)
       if (!event._constructed) {
         return
       }
-      console.log('goods', 'addCart', 2)
       this.$emit('add-cart', obj)
     },
     removeCart (obj) {
-      // this.goods.forEach((good) => {
-      //   good.foods.forEach((food) => {
-      //     if (food === obj) {
-      //       food.count --
-      //       return
-      //     }
-      //   })
-      // })
+      if (!event._constructed) {
+        return
+      }
       this.$emit('remove-cart', obj)
     },
     clearCart () {
-      // this.goods.forEach((good) => {
-      //   good.foods.forEach((food) => {
-      //     if (food.count) {
-      //       food.count = 0
-      //     }
-      //   })
-      // })
+      if (!event._constructed) {
+        return
+      }
       this.$emit('clear-cart')
     },
     _initScroll () {
+      if (!this.menuScroll) {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
+      } else {
+        this.menuScroll.refresh()
+      }
+      if (!this.foodScroll) {
         this.foodScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3, click: true})
-
-        this.foodScroll.on('scroll', (pos) => {
-          this.srcollY = Math.abs(Math.round(pos.y))
-        })
+      } else {
+        this.foodScroll.refresh()
+      }
+      this.foodScroll.on('scroll', (pos) => {
+        this.srcollY = Math.abs(Math.round(pos.y))
+      })
     },
     _calculateHeight () {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')

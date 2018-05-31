@@ -5,10 +5,8 @@ import App from './App'
 import VueResource from 'vue-resource'
 import router from '@/router/router'
 import '@/common/less/index.less'
-import vueTap from 'v-tap'
 
 Vue.use(VueResource)
-Vue.use(vueTap)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
