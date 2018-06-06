@@ -7,9 +7,9 @@
       <li class="tab-item"><router-link to="/seller">商家</router-link></li>
     </ul>
     <keep-alive>
-      <router-view :seller="seller" :goods="goods" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></router-view>
+      <router-view :seller="seller" :goods="goods" @add="addFood" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></router-view>
     </keep-alive>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" v-on:clear-cart="clearCart($event)" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" v-on:clear-cart="clearCart($event)" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></shopcart>
   </div>
 </template>
 <script type="text/babel">
@@ -68,6 +68,16 @@ export default {
     }
   },
   methods: {
+    addFood (target) {
+      console.log(target)
+      this._drop(target)
+    },
+    _drop (target) {
+      // 体验优化,异步执行下落动画
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target)
+      })
+    },
      addCart (obj) {
       if (!event._constructed) {
         return

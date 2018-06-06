@@ -31,7 +31,7 @@
 	        				    <span class="add"><i class="icon-add_circle"></i></span>
 	        				</div>
 	        				<div class="cartcontrol-wrapper">
-	        					<cartcontrol :food="food" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
+	        					<cartcontrol :food="food" @add="addFood" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
 	        				</div>
 	        			</div>
 	  				</li>
@@ -39,7 +39,7 @@
   			</li>
   		</ul>
   	</div>
-  	<food :select-food="selectFood" ref="food" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></food>
+  	<food :select-food="selectFood" ref="food" @add="addFood" v-on:add-cart="addCart($event)" v-on:remove-cart="removeCart($event)"></food>
   </div>
 </template>
 
@@ -113,6 +113,12 @@ export default {
     showFoodDetail (food) {
       this.selectFood = food
       this.$refs.food.show()
+    },
+    addFood (obj) {
+      if (!event._constructed) {
+        return
+      }
+      this.$emit('add', event.target)
     },
     addCart (obj) {
       if (!event._constructed) {

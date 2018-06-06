@@ -15,6 +15,15 @@
         {{payDesc}}
       </div>
     </div>
+    <div class="ball-container">
+      <div v-for="ball in balls">
+        <transition name="drop" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+          <div class="ball" v-show="ball.show">
+            <div class="inner inner-hook"></div>
+          </div>
+        </transition>
+      </div>
+    </div>
     <div class="cart-detail-wrap" v-show="detailShow" >
      <div class="cart-detail-main">
       <div class="title">购物车<button class="clear" @click="clearCart">清空</button></div>
@@ -24,7 +33,7 @@
             <span class="text">{{food.name}}</span>
             <span class="price">￥{{food.price*food.count}}</span>
             <div class="cartcontrol-wrapper">
-              <cartcontrol :food="food" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
+              <cartcontrol :food="food" @add="addFood" v-on:add-cart="addCart(food)" v-on:remove-cart="removeCart(food)"></cartcontrol>
             </div>
           </li>
         </ul>
@@ -61,7 +70,13 @@ export default {
   },
   data () {
     return {
-      isShowDetail: false
+      isShowDetail: false,
+      balls: [{show: false, el: null},
+                {show: false, el: null},
+               {show: false, el: null},
+               {show: false, el: null},
+               {show: false, el: null}],
+      dropBalls: []// 下落的小球
     }
   },
   computed: {
@@ -116,12 +131,61 @@ export default {
       }
       this.$emit('add-cart', obj)
     },
+    addFood (target) {
+      console.log(target)
+      this.drop(target)
+    },
     removeCart (obj) {
       this.$emit('remove-cart', obj)
     },
     clearCart () {
       this.isShowDetail = false
       this.$emit('clear-cart')
+    },
+    drop (el) { /* 抛物 */
+      console.log(el)
+      for (let i = 0; i < this.balls.length; i++) {
+         let ball = this.balls[i]
+         if (!ball.show) {
+             ball.show = true
+             ball.el = el
+             this.dropBalls.push(ball)
+             return
+         }
+      }
+    },
+    beforeEnter (el) { /* 购物车小球动画实现 */
+      let count = this.balls.length
+      while (count--) {
+         let ball = this.balls[count]
+         if (ball.show) {
+             let rect = ball.el.getBoundingClientRect() // 元素相对于视口的位置
+             let x = rect.left - 32
+             let y = -(window.innerHeight - rect.top - 22) // 获取y
+             el.style.display = ''
+             el.style.webkitTransform = 'translateY(' + y + 'px)' // translateY
+             el.style.transform = 'translateY(' + y + 'px)'
+             let inner = el.getElementsByClassName('inner-hook')[0]
+             inner.style.webkitTransform = 'translateX(' + x + 'px)'
+             inner.style.transform = 'translateX(' + x + 'px)'
+         }
+      }
+    },
+    enter (el, done) { /* 重置小球数量  样式重置 */
+      // let rf = el.offsetHeight
+      el.style.webkitTransform = 'translate3d(0,0,0)'
+      el.style.transform = 'translate3d(0,0,0)'
+      let inner = el.getElementsByClassName('inner-hook')[0]
+      inner.style.webkitTransform = 'translate3d(0,0,0)'
+      inner.style.transform = 'translate3d(0,0,0)'
+      el.addEventListener('transitionend', done)
+    },
+    afterEnter (el) { /* 初始化小球 */
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
     }
   },
   components: {
@@ -227,6 +291,40 @@ export default {
         color:#fff;
       }
     }
+  }
+
+  .ball-container{
+    .ball{
+      position:fixed;
+      left:32px;
+      bottom:22px;
+      z-index:200;
+      transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+
+      .inner{
+        width:16px;
+        height:16px;
+        border-radius:50%;
+        background-color:rgb(0, 160, 220);
+        transition: all 0.4s linear;
+      }
+
+      // &.drop-enter-active{
+      //   transition:all 1s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+      // }
+      // &.drop-enter{
+      //   transform:translate3d(0, -400px, 0);
+      //   .inner{
+      //     transform:translate3d(300px, 0, 0);
+      //   }
+      // }
+      // &.drop-enter-to{
+      //   transform:translate3d(0, 0, 0);
+      //   .inner{
+      //     transform:translate3d(0, 0, 0);
+      //   }
+      // }
+    }    
   }
 
   .cart-detail-main{
