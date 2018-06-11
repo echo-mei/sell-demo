@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- 开发环境版本，包含了用帮助的命令行警告 -->
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<h1>{{message}}</h1>  
+		<h2>{{commes}}</h2>
+		<button-counter :submes="submes"></button-counter>
+	</div>
+
+
+<script type="text/javascript">
+		// 定义一个名为 button-counter 的新组件
+	Vue.component('button-counter', {
+		props:{
+			submes: String
+		},
+		data: function () {
+			return {
+			  count: 0
+			}
+		},
+		template: '<button v-on:click="count++">{{submes}} You clicked me {{ count }} times.</button>',
+		beforeCreate: function() {
+	      console.group('------component beforeCreate创建前状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","count   : " + this.count);
+	    },
+	    created: function() {
+	      console.group('------component created创建完毕状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes);
+	    },
+	    beforeMount: function() {
+	      console.group('------component beforeMount挂载前状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
+	      console.log(this.$el);
+	      console.log("%c%s", "color:red","data   : " + this.$data); 	      
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes); 
+	    },
+	    mounted: function() {
+	      console.group('------component mounted 挂载结束状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el); //已被初始化
+	      console.log(this.$el); 
+	      console.log("%c%s", "color:red","data   : " + this.$data);   
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes);
+	    },
+	    beforeUpdate: function () {
+	      console.group('component beforeUpdate 更新前状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);   
+	  	  console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes);
+	    },
+	    updated: function () {
+	      console.group('component updated 更新完成状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el); 
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes);
+	    },
+	    beforeDestroy: function () {
+	      console.group('component beforeDestroy 销毁前状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);    
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes);
+	    },
+	    destroyed: function () {
+	      console.group('component destroyed 销毁完成状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);  
+	      console.log("%c%s", "color:red","props   : " + this.$props); 
+	      console.log("%c%s", "color:red","submes   : " + this.submes); 
+	    }
+	});
+
+	var app = new Vue({
+		el:"#app",
+		data:{
+			message:"hello world!",
+			submes:"father"
+		},
+		beforeCreate: function() {
+	      console.group('------beforeCreate创建前状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red" , "el     : " + this.$el); //undefined
+	      console.log("%c%s", "color:red","data   : " + this.$data); //undefined 
+	      console.log("%c%s", "color:red","message: " + this.message) 
+	    },
+	    created: function() {
+	      console.group('------created创建完毕状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el); //undefined
+	      console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化 
+	      console.log("%c%s", "color:red","message: " + this.message); //已被初始化
+	    },
+	    beforeMount: function() {
+	      console.group('------beforeMount挂载前状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
+	      console.log(this.$el);
+	      console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化  
+	      console.log("%c%s", "color:red","message: " + this.message); //已被初始化  
+	    },
+	    mounted: function() {
+	      console.group('------mounted 挂载结束状态------');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el); //已被初始化
+	      console.log(this.$el);    
+	      console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化
+	      console.log("%c%s", "color:red","message: " + this.message); //已被初始化 
+	    },
+	    beforeUpdate: function () {
+	      console.group('beforeUpdate 更新前状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);   
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","message: " + this.message); 
+	    },
+	    updated: function () {
+	      console.group('updated 更新完成状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el); 
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","message: " + this.message); 
+	    },
+	    beforeDestroy: function () {
+	      console.group('beforeDestroy 销毁前状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);    
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","message: " + this.message); 
+	    },
+	    destroyed: function () {
+	      console.group('destroyed 销毁完成状态===============》');
+	      console.log(this);
+	      console.log("%c%s", "color:red","el     : " + this.$el);
+	      console.log(this.$el);  
+	      console.log("%c%s", "color:red","data   : " + this.$data); 
+	      console.log("%c%s", "color:red","message: " + this.message)
+	    },
+	    computed: {
+		  commes: function(){
+		  	console.group('computed 计算属性===============》');
+		    console.log(this);
+		    // console.log("%c%s", "color:red","commes: " + this.commes)
+		  	return this.message+" computed";
+		  }
+		}
+	});
+
+
+</script>
+</body>
+</html> 

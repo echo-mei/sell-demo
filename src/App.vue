@@ -69,7 +69,6 @@ export default {
   },
   methods: {
     addFood (target) {
-      console.log(target)
       this._drop(target)
     },
     _drop (target) {
@@ -109,9 +108,6 @@ export default {
       })
     },
     clearCart () {
-      if (!event._constructed) {
-        return
-      }
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {

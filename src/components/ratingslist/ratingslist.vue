@@ -1,9 +1,9 @@
 <template>
   <div class="ratinglist">
     <div class="rating-classify">
-      <button class="all" @click="showRatingsAll">全部<span>57</span></button>
-      <button class="recommend" @click="showRatingsTJ">推荐<span>47</span></button>
-      <button class="tucao" @click="showRatingsTC">吐槽<span>10</span></button>
+      <button class="all" @click="showRatingsAll">全部<span>{{allRatings}}</span></button>
+      <button class="recommend" @click="showRatingsTJ">推荐<span>{{tjRatings}}</span></button>
+      <button class="tucao" @click="showRatingsTC">吐槽<span>{{tcRatings}}</span></button>
     </div>
     <div class="rating-filter" :class="{'active': fiter === 3}">
       <span class="icon-check_circle" @click="lookOnlyText"></span>
@@ -45,6 +45,33 @@ export default {
     }
   },
   computed: {
+    allRatings () {
+      var num = 0
+      num = this.ratings && this.ratings.length
+      return num
+    },
+    tjRatings () {
+      var temRatings = []
+      var num = 0
+      if (this.ratings) {
+        temRatings = this.ratings.filter(function (item) {
+         return item.rateType === 0
+        })
+      }
+      num = temRatings && temRatings.length
+      return num
+    },
+    tcRatings () {
+      var temRatings = []
+      var num = 0
+      if (this.ratings) {
+        temRatings = this.ratings.filter(function (item) {
+         return item.rateType === 1
+        })
+      }
+      num = temRatings && temRatings.length
+      return num
+    },
     getRatings () {
       var temRatings = []
       if (this.fiter === 1) {

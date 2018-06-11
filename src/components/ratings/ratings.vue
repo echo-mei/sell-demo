@@ -64,8 +64,6 @@ export default {
       // error callback
     })
   },
-  computed: {
-  },
   methods: {
     _initScroll () {
       this.$nextTick(() => {

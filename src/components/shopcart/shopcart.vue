@@ -72,7 +72,7 @@ export default {
     return {
       isShowDetail: false,
       balls: [{show: false, el: null},
-                {show: false, el: null},
+               {show: false, el: null},
                {show: false, el: null},
                {show: false, el: null},
                {show: false, el: null}],
@@ -132,18 +132,20 @@ export default {
       this.$emit('add-cart', obj)
     },
     addFood (target) {
-      console.log(target)
       this.drop(target)
     },
     removeCart (obj) {
+      if (!event._constructed) {
+        return
+      }
       this.$emit('remove-cart', obj)
     },
     clearCart () {
+      console.log('shopcart', event)
       this.isShowDetail = false
       this.$emit('clear-cart')
     },
     drop (el) { /* 抛物 */
-      console.log(el)
       for (let i = 0; i < this.balls.length; i++) {
          let ball = this.balls[i]
          if (!ball.show) {
@@ -157,28 +159,31 @@ export default {
     beforeEnter (el) { /* 购物车小球动画实现 */
       let count = this.balls.length
       while (count--) {
-         let ball = this.balls[count]
-         if (ball.show) {
-             let rect = ball.el.getBoundingClientRect() // 元素相对于视口的位置
-             let x = rect.left - 32
-             let y = -(window.innerHeight - rect.top - 22) // 获取y
-             el.style.display = ''
-             el.style.webkitTransform = 'translateY(' + y + 'px)' // translateY
-             el.style.transform = 'translateY(' + y + 'px)'
-             let inner = el.getElementsByClassName('inner-hook')[0]
-             inner.style.webkitTransform = 'translateX(' + x + 'px)'
-             inner.style.transform = 'translateX(' + x + 'px)'
-         }
+        let ball = this.balls[count]
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect()
+          let x = rect.left - 32
+          let y = -(window.innerHeight - rect.top - 22)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          el.style.transform = `translate3d(0,${y}px,0)`
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+          inner.style.transform = `translate3d(${x}px,0,0)`
+        }
       }
     },
     enter (el, done) { /* 重置小球数量  样式重置 */
-      // let rf = el.offsetHeight
-      el.style.webkitTransform = 'translate3d(0,0,0)'
-      el.style.transform = 'translate3d(0,0,0)'
-      let inner = el.getElementsByClassName('inner-hook')[0]
-      inner.style.webkitTransform = 'translate3d(0,0,0)'
-      inner.style.transform = 'translate3d(0,0,0)'
-      el.addEventListener('transitionend', done)
+      /* eslint-disable no-unused-vars */
+      let rf = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0,0,0)'
+        el.style.transform = 'translate3d(0,0,0)'
+        let inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform = 'translate3d(0,0,0)'
+        inner.style.transform = 'translate3d(0,0,0)'
+        el.addEventListener('transitionend', done)
+      })
     },
     afterEnter (el) { /* 初始化小球 */
       let ball = this.dropBalls.shift()
@@ -358,6 +363,8 @@ export default {
       }
     }
     .cart-detail{
+      width:100%;
+      overflow:hidden;
       max-height:217px;
       padding-bottom:20px;
 

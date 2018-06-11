@@ -25,7 +25,7 @@
           <span :class="classMap[item.type]" class="icon"></span>
           <span class="des">{{item.description}}</span>
         </li>
-      </ul>
+       </ul>
     </div>
     <div class="seller-cont seller-pics">
        <h1 class="title">商家实景</h1>
@@ -58,8 +58,6 @@ export default {
       isfavorite: false
     }
   },
-  created () {
-  },
   watch: {
     seller: function () {
       this._initScroll()
@@ -83,8 +81,10 @@ export default {
       this.$nextTick(() => {
         if (!this.sellerScroll) {
           this.sellerScroll = new BScroll(this.$refs.sellerWrap, {click: true})
+          console.log(this.sellerScroll)
         } else {
           this.sellerScroll.refresh()
+          console.log(this.sellerScroll)
         }
       })
     },
@@ -257,12 +257,10 @@ export default {
 
   .seller-pics{
     .pics-wrap{
-      height:120px;
       overflow:hidden;
 
       img{
         width:90px;
-        height:120px;
         margin-right:6px;
 
         &:last-of-type{
@@ -273,7 +271,8 @@ export default {
   }
 
   .seller-info{
-    padding-bottom:0;
+    // padding-bottom:0;
+    margin-bottom:0;
     .infos-wrapper{
       text-align:left;
 

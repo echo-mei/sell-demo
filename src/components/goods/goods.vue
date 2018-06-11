@@ -132,12 +132,6 @@ export default {
       }
       this.$emit('remove-cart', obj)
     },
-    clearCart () {
-      if (!event._constructed) {
-        return
-      }
-      this.$emit('clear-cart')
-    },
     _initScroll () {
       if (!this.menuScroll) {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
@@ -156,7 +150,9 @@ export default {
     _calculateHeight () {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-item-hook')
       let height = 0
-      this.listHeight.push(height)
+      if (this.listHeight.length <= 0) {
+        this.listHeight.push(height)
+      }
       for (let i = 0; i < foodList.length; i++) {
         height += foodList[i].clientHeight
         this.listHeight.push(height)
